@@ -1,5 +1,5 @@
-const webpack = require('webpack');
 const resolve = require('path').resolve;
+
 const config = {
     devtool: 'eval-source-map',
     entry: __dirname + '/js/index.jsx',
@@ -14,7 +14,7 @@ const config = {
     module: {
         rules: [
             {
-                test: /\.jsx?/,
+                test: /\.(js|jsx)$/,
                 loader: 'babel-loader',
                 exclude: /node_modules/,
                 query: {
@@ -22,8 +22,8 @@ const config = {
                 }
             }, {
                 test: /\.css$/,
-                loader: 'style-loader!css-loader?modules'
-            }]
+                use: ["style-loader", "css-loader"]
+            },]
     }
 };
 module.exports = config;

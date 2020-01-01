@@ -1,15 +1,19 @@
 import requests
 from dateutil.parser import parse
-from flask import render_template, request, Blueprint
+from flask import render_template, request, Blueprint, jsonify
 
 from templates import app, items, items_url
 
 get_items_blueprint = Blueprint('getItems', __name__)
 
+@get_items_blueprint.route('/getRefinementList', methods=['GET'])
+def getRefinementList():
+    return jsonify(items.void_relics.refinement)
 
-@get_items_blueprint.route('/', methods=['GET'])
-def index():
-    return render_template('index.html', data=items)
+
+@get_items_blueprint.route('/getRelicsList', methods=['GET'])
+def getRelicsList():
+    return jsonify([relics for relics in items.void_relics.relics])
 
 
 @get_items_blueprint.route('/getItems/<item_name>', methods=['GET'])

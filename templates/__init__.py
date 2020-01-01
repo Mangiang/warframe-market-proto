@@ -2,7 +2,7 @@ import logging
 import os
 
 import requests
-from flask import Flask, json
+from flask import Flask, json, render_template
 from flask.logging import default_handler
 from flask_cors import CORS
 from flask_limiter import Limiter
@@ -25,6 +25,10 @@ items_url = f'{base_api}/items'
 items = None
 
 
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.html', data=items)
+
 def get_relics():
     global items
 
@@ -45,7 +49,7 @@ def get_relics():
                 name = relic_obj['name'].lower().split()[1]
                 tmp_list.add(name)
 
-        items.void_relics.__setattr__(relic, tmp_list)
+        items.void_relics.relics.append({"era": relic, "names": list(tmp_list)})
     print(items.void_relics)
 
 
@@ -55,4 +59,5 @@ app.logger.setLevel(gunicorn_logger.level)
 get_relics()
 
 from templates.getItems.views import get_items_blueprint
+
 app.register_blueprint(get_items_blueprint)

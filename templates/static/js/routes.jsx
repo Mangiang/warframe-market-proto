@@ -1,11 +1,14 @@
 import React from 'react';
 import {hashHistory, HashRouter, Route} from 'react-router-dom';
-import Home from './components/Home';
+import RelicForm from './components/RelicForm';
+import Header from "./components/Header";
+
 // import more components
 export default (
     <HashRouter history={hashHistory}>
         <div>
-            <Route path='/' component={Home}/>
+            <Header/>
+            <Route path='/' component={RelicForm}/>
         </div>
     </HashRouter>
 );

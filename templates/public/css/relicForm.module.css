@@ -1,0 +1,28 @@
+.items {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.item {
+    flex: 1 0 10%;
+    box-sizing: border-box;
+    color: #171e42;
+    padding: 5px;
+}
+
+.borderForm {
+    border: 2px groove #ddd !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 0 1.5em 0 !important;
+}
+
+.legend {
+    font-size: 1.2em !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    width: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-bottom: none;
+}
+
