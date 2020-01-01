@@ -10,11 +10,13 @@ get_items_blueprint = Blueprint('getItems', __name__)
 
 
 @get_items_blueprint.route('/getRefinementList', methods=['GET'])
+@cross_origin()
 def get_refinement_list():
     return jsonify(items.void_relics.refinement)
 
 
 @get_items_blueprint.route('/getRelicsList', methods=['GET'])
+@cross_origin()
 def get_relics_list():
     return jsonify([relics for relics in items.void_relics.relics])
 
@@ -32,7 +34,7 @@ def get_relics_stats():
     app.logger.info(f'relic names {relic_names}')
     item_data = []
 
-    id = 0
+    id = 1
 
     for refin in refinement:
         for relic in relic_names:

@@ -55,14 +55,15 @@ const RelicTable = (props) => {
         },
     ];
 
+    const data = props.data;
+
     return (
-        <div>
-            <DataTable
-                title="Relics"
-                columns={columns}
-                data={props.data}
-            />
-        </div>
+        <DataTable
+            title="Relics"
+            columns={columns}
+            striped={true}
+            data={data}
+        />
     )
 };
 

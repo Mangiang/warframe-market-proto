@@ -1,4 +1,6 @@
 const resolve = require('path').resolve;
+const merge = require("webpack-merge");
+const parts = require('./webpack.parts');
 
 const config = {
     devtool: 'eval-source-map',
@@ -26,4 +28,7 @@ const config = {
             },]
     }
 };
-module.exports = config;
+
+module.exports = merge([config,
+    parts.setFreeVariable("BACKEND_URL", "http://127.0.0.1:5000"),
+]);

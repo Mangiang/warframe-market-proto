@@ -13,16 +13,17 @@ const RelicForm = (props) => {
         const [relicsState, setRelicsState] = useState(relicsStore.initialState);
 
         useLayoutEffect(() => {
+            console.log(BACKEND_URL);
             relicsFormStore.subscribe(setRelicsFormState);
             relicsFormStore.init();
             relicsStore.subscribe(setRelicsState);
             relicsStore.init();
-            axios.get("http://127.0.0.1:5000/getRefinementList")
+            axios.get(`${BACKEND_URL}/getRefinementList`)
                 .then(res => {
                     relicsStore.setRefinementList(res.data);
                 });
 
-            axios.get("http://127.0.0.1:5000/getRelicsList")
+            axios.get(`${BACKEND_URL}/getRelicsList`)
                 .then(res => {
                     relicsStore.setRelicsTypesList(res.data);
                 });
@@ -51,7 +52,7 @@ const RelicForm = (props) => {
         };
 
         const submit = () => {
-            axios.post("http://127.0.0.1:5000/getRelicsStats", {
+            axios.post(`${BACKEND_URL}/getRelicsStats`, {
                 refinement: relicsFormState.refinementList,
                 relic_name: relicsFormState.relicsTypesList
             })
