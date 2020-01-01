@@ -31,14 +31,57 @@
                     </select>
                     <label {% if error_relic_name %} style="color: red" {% endif %} for="relic_name">Name</label>
                     <div class="container" id="relic_name">
-                        <div class="row">
+                        <label for="relic_name_lith"><b>Lith</b></label>
+                        <div class="row" id="relic_name_lith">
                             {% for relic in data.void_relics.lith %}
                                 <div class="col">
                                     <input class="form-check-input active" type="checkbox" value="lith_{{ relic }}"
-                                           id={{ relic }} name="relic_name"
+                                           id="lith_{{ relic }}" name="relic_name"
                                             {% if prev_data and ('lith_' + relic) in prev_data['relic_names'] %}
                                            checked="checked" {% endif %}>
-                                    <label class="form-check-label" for={{ relic }}>
+                                    <label class="form-check-label" for="lith_{{ relic }}">
+                                        {{ relic }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <label for="relic_name_meso"><b>Meso</b></label>
+                        <div class="row" id="relic_name_meso">
+                            {% for relic in data.void_relics.meso %}
+                                <div class="col">
+                                    <input class="form-check-input active" type="checkbox" value="meso_{{ relic }}"
+                                           id="meso_{{ relic }}" name="relic_name"
+                                            {% if prev_data and ('meso_' + relic) in prev_data['relic_names'] %}
+                                           checked="checked" {% endif %}>
+                                    <label class="form-check-label" for="meso_{{ relic }}">
+                                        {{ relic }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <label for="relic_name_neo"><b>Neo</b></label>
+                        <div class="row" id="relic_name_neo">
+                            {% for relic in data.void_relics.neo %}
+                                <div class="col">
+                                    <input class="form-check-input active" type="checkbox" value="neo_{{ relic }}"
+                                           id="neo_{{ relic }}" name="relic_name"
+                                            {% if prev_data and ('neo_' + relic) in prev_data['relic_names'] %}
+                                           checked="checked" {% endif %}>
+                                    <label class="form-check-label" for="neo_{{ relic }}">
+                                        {{ relic }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <label for="relic_name_axi"><b>Axi</b></label>
+                        <div class="row" id="relic_name_axi">
+                            {% for relic in data.void_relics.axi %}
+                                <div class="col">
+                                    <input class="form-check-input active" type="checkbox" value="axi_{{ relic }}"
+                                           id="axi_{{ relic }}" name="relic_name"
+                                            {% if prev_data and ('axi_' + relic) in prev_data['relic_names'] %}
+                                           checked="checked" {% endif %}>
+                                    <label class="form-check-label" for="axi_{{ relic }}">
                                         {{ relic }}
                                     </label>
                                 </div>

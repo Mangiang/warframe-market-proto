@@ -25,7 +25,6 @@ items_url = f'{base_api}/items'
 with open(os.path.join("./static", "data", "items_categories.json"), "r") as test_file:
     items = Items(json.load(test_file))
 
-
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html', data=items)
