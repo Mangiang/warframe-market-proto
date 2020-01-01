@@ -13,6 +13,7 @@ from logger import RequestFormatter
 
 app = Flask(__name__, static_folder='./public', template_folder="./static")
 CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 limiter = Limiter(key_func=get_remote_address)
 limiter.init_app(app)
 
@@ -27,7 +28,8 @@ items = None
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html', data=items)
+    return render_template('base.html', data=items)
+
 
 def get_relics():
     global items
@@ -50,12 +52,8 @@ def get_relics():
                 tmp_list.add(name)
 
         items.void_relics.relics.append({"era": relic, "names": list(tmp_list)})
-    print(items.void_relics)
 
 
-gunicorn_logger = logging.getLogger('gunicorn.error')
-app.logger.handlers = gunicorn_logger.handlers
-app.logger.setLevel(gunicorn_logger.level)
 get_relics()
 
 from templates.getItems.views import get_items_blueprint

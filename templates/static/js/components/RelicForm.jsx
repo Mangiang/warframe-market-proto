@@ -8,9 +8,9 @@ import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 import 'react-tabs/style/react-tabs.css';
 import "../../../public/css/relicForm.module.css"
 
-const RelicForm = () => {
-        const [relicsState, setRelicsState] = useState(relicsStore.initialState);
+const RelicForm = (props) => {
         const [relicsFormState, setRelicsFormState] = useState(relicsFormStore.initialState);
+        const [relicsState, setRelicsState] = useState(relicsStore.initialState);
 
         useLayoutEffect(() => {
             relicsFormStore.subscribe(setRelicsFormState);
@@ -19,13 +19,11 @@ const RelicForm = () => {
             relicsStore.init();
             axios.get("http://127.0.0.1:5000/getRefinementList")
                 .then(res => {
-                    console.log(res.data);
                     relicsStore.setRefinementList(res.data);
                 });
 
             axios.get("http://127.0.0.1:5000/getRelicsList")
                 .then(res => {
-                    console.log(res.data);
                     relicsStore.setRelicsTypesList(res.data);
                 });
         }, []);
@@ -50,6 +48,19 @@ const RelicForm = () => {
 
         const checkRelics = (name) => {
             return relicsFormState.relicsTypesList.indexOf(name) !== -1;
+        };
+
+        const submit = () => {
+            axios.post("http://127.0.0.1:5000/getRelicsStats", {
+                refinement: relicsFormState.refinementList,
+                relic_name: relicsFormState.relicsTypesList
+            })
+                .then(res => {
+                    props.setRelicsStats(res.data);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         };
 
         return (
@@ -108,7 +119,7 @@ const RelicForm = () => {
                 </Form>
                 <div className="row">
                     <div className="col">
-                        <Button color="primary" className="float-right">Search</Button>
+                        <Button color="primary" className="float-right" onClick={submit}>Search</Button>
                     </div>
                 </div>
             </div>
