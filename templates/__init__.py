@@ -54,4 +54,5 @@ app.logger.handlers = gunicorn_logger.handlers
 app.logger.setLevel(gunicorn_logger.level)
 get_relics()
 
-import templates.getItems.views
+from templates.getItems.views import get_items_blueprint
+app.register_blueprint(get_items_blueprint)

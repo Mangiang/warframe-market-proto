@@ -1,16 +1,18 @@
 import requests
 from dateutil.parser import parse
-from flask import render_template, request
+from flask import render_template, request, Blueprint
 
 from templates import app, items, items_url
 
+get_items_blueprint = Blueprint('getItems', __name__)
 
-@app.route('/', methods=['GET'])
+
+@get_items_blueprint.route('/', methods=['GET'])
 def index():
     return render_template('index.html', data=items)
 
 
-@app.route('/getItems/<item_name>', methods=['GET'])
+@get_items_blueprint.route('/getItems/<item_name>', methods=['GET'])
 def get_item(item_name):
     url = f'{items_url}/{item_name}/statistics'
 
@@ -39,7 +41,7 @@ def get_item(item_name):
         return {'name': item_name, 'last_stats': hours_stats[-1]}
 
 
-@app.route('/itemsList', methods=['POST'])
+@get_items_blueprint.route('/itemsList', methods=['POST'])
 def get_stats():
     content = request.form
     app.logger.info(f'Content {content}')
