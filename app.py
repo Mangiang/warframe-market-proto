@@ -21,10 +21,10 @@ limiter.init_app(app)
 formatter = RequestFormatter('[%(asctime)s] %(levelname)s in %(method)s %(path)s: %(message)s')
 default_handler.setFormatter(formatter)
 base_api = 'https://api.warframe.market/v1'
+warframestat_api = 'https://api.warframestat.us/items/search'
 items_url = f'{base_api}/items'
 
-with open(os.path.join("./static", "data", "items_categories.json"), "r") as test_file:
-    items = Items(json.load(test_file))
+items = None
 
 
 @app.route('/', methods=['GET'])
@@ -93,7 +93,31 @@ def get_stats():
     return render_template('index.html', data=items, relics=item_data, prev_data=prev_data)
 
 
-if __name__ == '__main__':
+def get_relics():
+    global items
+
+    with open(os.path.join("./static", "data", "items_categories.json"), "r") as test_file:
+        items = Items(json.load(test_file))
+
+    for relic in items.void_relics.all:
+        tmp_list = set()
+        try:
+            json_response_stat = requests.get(f'{warframestat_api}/{relic}').json()
+        except requests.exceptions.RetryError as e:
+            print(e)
+        except requests.exceptions.BaseHTTPError as e:
+            print(e)
+
+        for relic_obj in json_response_stat:
+            if relic_obj['category'] == 'Relics':
+                name = relic_obj['name'].lower().split()[1]
+                tmp_list.add(name)
+
+        items.void_relics.__setattr__(relic, tmp_list)
+    print(items.void_relics)
+
+get_relics()
+if __name__ == 'main':
     gunicorn_logger = logging.getLogger('gunicorn.error')
     app.logger.handlers = gunicorn_logger.handlers
     app.logger.setLevel(gunicorn_logger.level)
