@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    <title>WarframeMarleter</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="jumbotron text-center">
+        <h1>Warframe Market proto</h1>
+        <p>Get the best relic to sell at any given time</p>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-2">
+            </div>
+            <div class="col-9 mx-auto">
+                <form action='/itemsList' method="post">
+                    <label {% if error_refinement %} style="color: red" {% endif %} for="refinement">Refinement</label>
+                    <select style="width: 100%" id="refinement" class="js-select2" name="refinement" multiple>
+                        {% for refin in data.void_relics.refinement %}
+                            <option value={{ refin }} {% if prev_data and refin in prev_data['refinement'] %} selected {% endif %}>{{ refin }}</option>
+                        {% endfor %}
+                    </select>
+                    <label {% if error_relic_name %} style="color: red" {% endif %} for="relic_name">Name</label>
+                    <div class="container" id="relic_name">
+                        <div class="row">
+                            {% for relic in data.void_relics.lith %}
+                                <div class="col">
+                                    <input class="form-check-input active" type="checkbox" value="lith_{{ relic }}"
+                                           id={{ relic }} name="relic_name"
+                                            {% if prev_data and ('lith_' + relic) in prev_data['relic_names'] %}
+                                           checked="checked" {% endif %}>
+                                    <label class="form-check-label" for={{ relic }}>
+                                        {{ relic }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-info" id='check_all'>Check All</button>
+                    `
+                    <button type="button" class="btn btn-info" id='uncheck_all'>Uncheck All</button>
+                    `
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+            <div class="col-2">
+            </div>
+        </div>
+    </div>
+    {% if relics %}
+        <div class="container">
+        <div class="row">
+            <div class="col-2">
+            </div>
+            <div class="col-12 mx-auto">
+                <table class="table table-striped" id="void-relics-table" style="width: 100%">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Relic Name</th>
+                        <th scope="col">Order Type</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Volume</th>
+                        <th scope="col">Min Price</th>
+                        <th scope="col">Avg Price</th>
+                        <th scope="col">Max Price</th>
+                        <th scope="col">WA Price</th>
+                        <th scope="col">Median Price</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for relic in relics %}
+                        {% if relic.last_stats|length != 0 %}
+                            <tr>
+                                <th scope="row">{{ relic.name }}</th>
+                                <td align="center">{{ relic.last_stats.order_type }}</td>
+                                <td align="center">{{ relic.last_stats.date }}</td>
+                                <td align="center">{{ relic.last_stats.time }}</td>
+                                <td align="center">{{ relic.last_stats.volume }}</td>
+                                <td align="center">{{ relic.last_stats.min_price }}</td>
+                                <td align="center">{{ relic.last_stats.avg_price }}</td>
+                                <td align="center">{{ relic.last_stats.max_price }}</td>
+                                <td align="center">{{ relic.last_stats.wa_price }}</td>
+                                <td align="center">{{ relic.last_stats.median }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-2">
+            </div>
+        </div>
+    {% endif %}
+    <script>
+        $(document).ready(function () {
+            $('#refinement').select2({
+                placeholder: "Select",
+                allowClear: true
+            });
+            $('#void-relics-table').DataTable({
+                "paging": false,
+                "info": false
+            });
+            $('#check_all').click(function () {
+                $('input[name=relic_name]').prop('checked', true);
+            });
+            $('#uncheck_all').click(function () {
+                $('input[name=relic_name]').prop('checked', false);
+            });
+        });
+    </script>
+{% endblock %}
