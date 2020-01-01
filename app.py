@@ -1,3 +1,4 @@
+import logging
 import os
 
 import requests
@@ -24,6 +25,7 @@ items_url = f'{base_api}/items'
 
 with open(os.path.join("./static", "data", "items_categories.json"), "r") as test_file:
     items = Items(json.load(test_file))
+
 
 @app.route('/', methods=['GET'])
 def index():
@@ -92,4 +94,7 @@ def get_stats():
 
 
 if __name__ == '__main__':
-    app.run(host="https://warframe-market-proto.herokuapp.com", port=80, processes=3)
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
+    app.run(host="https://warframe-market-proto.herokuapp.com", port=80, processes=3, debug=True)
