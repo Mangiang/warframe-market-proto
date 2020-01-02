@@ -20,12 +20,10 @@ const Header = () => {
                             <p>⚠ Work in progress ⚠ </p>
                             <p>Had to write it right ?</p>
                             <div className="lead">
-                                <a onClick={() => window.open("someLink", "_blank")}
-                                   href="https://github.com/Mangiang/warframe-market-proto" target="_blank">
+                                <a href="https://github.com/Mangiang/warframe-market-proto" target="_blank">
                                     <FontAwesomeIcon icon={faGithub} color={"black"}/>
                                 </a>
-                                <a style={{color: 'black'}} onClick={() => window.open("someLink", "_blank")}
-                                   href="https://warframe.market" target="_blank">
+                                <a style={{color: 'black'}} href="https://warframe.market" target="_blank">
                                     <FontAwesomeIcon icon={faUniversity} color={"black"}/>
                                 </a>
                             </div>
