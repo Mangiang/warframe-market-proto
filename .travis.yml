@@ -1,0 +1,32 @@
+language: node_js
+node_js:
+  - 10.12.0
+services:
+  - docker
+jobs:
+  include:
+    - stage: build
+      cache:
+        yarn: true
+        directories:
+          - templates/static/node_modules
+      script:
+        - cd templates/static
+        - yarn install
+        - yarn run build
+        - cd ../..
+      after_success:
+        - docker build -t shirito/warframe-market-proto:latest .;
+        - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin;
+        - docker push shirito/warframe-market-proto:latest;
+      deploy:
+        provider: script
+        script: bash scripts/deploy-script.sh
+        skip_cleanup: true
+    - stage: test production
+      script: curl http://warframe-market-proto.herokuapp.com
+env:
+  global:
+    - secure: hn/MBzR4m6m5MBZm6HqAuNzmATjuuNt5s62cgQcwJXvPVyQy7V29YS/N6d7anLoMNSJ331DDjyU7TbdThZuSoZdO5nou5dcuUEy3UD4SgVwkl0zVo7hMXpdoDiBbR8/rnvJLBZXpYEXU0xo1ox+n6pxDuKdaGXpd8LQrPbP1ru1xwy+uggVwz/wznf5PL494IFeMtfRjfFarjqXCbQMd8boxaxe7B2dW3N1Gyb5Pu1JjtgZNu3drgIVE0pzI64f+M7ExPIESyA/zCZlKE3fCFUud3rp5pXGiKnXPixT9QgIMU+csQH026/TZm+lXJzdol+0vkawd0TEbk6voCOdqfktRH0X6k6MPM4XDkTRxAUhpJVQ0IgqWl0F522cF7X0nt30AQkafUD+VUq7Q1+9mCwU4lEEWSEPUAQmD85tHXsRSxVg0meLplVBOeMD3r08hDsGGc8q0XTnx98leMApfLVZ9GAUfb2TzJy7pL8LBBewmsA5fMYjDaZ6obcNgbSiuXggo0G7W+r0KvsKSKTeyCvkYfmv6zE6xwarQo4YTw6H9483/DNFgKxB5vyi+XTefQy4hl+rIYnyQr7O5bdUwCPkuMVvb9MTdFuRB8+mn/AfTxbfYe8jDYBb1MCIXkqM6t+SqmzLfKXId110EiGgTIYekgZW81updfXwH/8Tagxk=
+    - secure: qCOtXZlW2875xV3AoWlpY+dywiZh+VfkPZ4ge4UO44S3lIPWOPKLU1jBe973xZfpvu8sO/pXyWrOrS0STI+2QCpAwdhlS0PIjLt/CxOwDeyKhgf5gubTNiTKjk1GbnoCWD/5/cwvIvmgRvsn3RIfWmxvc2EKDMWVeLsAzaMK89K6zYAVohOrod4GODLBzKVzPsqyLWv+0A/PJuPxyIx3+c9rAd+SC4EHqAo5yP/+Ezjr+iXMDbYx6yp9c1Z2OtnJLU1JBn1X1oGjoAJKq2qBvimYH/TDzegM6LouMTGlYOVVPmtU7jZkfl/vnpcaxDmf6F/Kui5PJl+OpNU7vmJ3uZmCuwd5s1Xvm3I/aJVZKqNj4WxVg09YI8AlqnOza2Og3xfYxR1eBrJdmEdRdXHh1Nb8EnX9gfGygVkXJw8N9SdBLMgU4D7IYqsmh116QKDIaj0osgDCPR7XtEA1CHCQ9oSmt0hPUn19IuDxz3msQCg0ECumejNivQsxr165z81aRFlAr0PQaaizvJnso3AA4w6iJPrAKOHwg8I4UWZ/31Q3vu0A7w6KKzH44FzKqzVr+GuLk0uTiifmRjHgVeUKs6LkEmwqBbCrkJA/8cnbEgd3cqDzb1y7O1/5hB4Wiu37C+5CVWcXz7K2UW/wd0D6fxaQ1ZeQsURlulhv7S0jfNM=
+    - secure: IDqde0QIXeH0/fv2/+I2hninbEVmSc34Nqlq0Pbwz8nAfCUk93+1Iwm3jo5zmKAAdIjM6rQq2r3iEWXD7DUGXkHgjoW2KfwtMoN6iw1069U/sW0w0tXNIMxObSWPdfvDG3cFsnNWVJTiW5mJRUpDKWVylj1l46mgTiWJfqW1s3jvkSeJj63JkHWbi/81nePtjgrgR8m54jNJh8sKOHVsoljnqOI9ud+9olddRRCBaZxDbaKCy/dkvKZHn0DvAXWhGcdurV7Q6NkCaoZkCqw1QgurJaXjRWPipRJO6sIeeXYz8WenYlq/9GxS7K8myUuZb62MfrR5n7tI9KPaEhQAThdGVIlhPVWcSjpE9CUuaXmlYGKXEvVRS9qoKNi/x+aX7sYGURI6fRJgt7ehBW+8pDc4Fup2lBvyLbwBRNZ6VmnHTXNuOl13jBCNYI36ROnThTWm9XO+CJ3CnPJRBjJm/OVCv93QKVO2ZjT2F12EB63NSeKR7x9D19v3xvQEuN/M+v/XYSld6u0hTLIcejxwV/Y2v0Tqkqml+QvQ2yLYKhTIDh15zghAEhopSpj1dDq6NBjNRSi5h+Pt0r7sSnBbt/33wWax//j5Lb7DY3HxJJbXGxvrk1Qe6T+mD/b56aFPOFT3/r26I0YJBJEjiiMZ+JQpRFFXmvjou03E0LgauO8=

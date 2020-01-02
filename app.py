@@ -1,9 +1,6 @@
-import logging
-
+import os
 from templates import app
 
-if __name__ == 'main':
-    gunicorn_logger = logging.getLogger('gunicorn.error')
-    app.logger.handlers = gunicorn_logger.handlers
-    app.logger.setLevel(gunicorn_logger.level)
-    app.run(host="https://warframe-market-proto.herokuapp.com", port=80, processes=3, debug=True)
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)

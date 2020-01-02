@@ -22,7 +22,7 @@ const relicsFormStore = {
     removeRefinementList: newRefin => {
         state = {
             ...state,
-            refinementList: state.refinementList.filter(refin => newRefin === refin),
+            refinementList: state.refinementList.filter(refin => newRefin !== refin),
         };
         subject.next(state);
     },
@@ -36,7 +36,7 @@ const relicsFormStore = {
     removeRelicsTypesList: newRelic => {
         state = {
             ...state,
-            relicsTypesList: state.refinementList.filter(relic => newRelic === relic),
+            relicsTypesList: state.refinementList.filter(relic => newRelic !==  relic),
         };
         subject.next(state);
     },

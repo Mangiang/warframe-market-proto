@@ -1,1 +1,1 @@
-web: gunicorn --log-level=info app:app
+web: waitress-serve --port=$PORT app:app

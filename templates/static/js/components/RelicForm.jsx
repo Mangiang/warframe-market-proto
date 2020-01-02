@@ -36,24 +36,30 @@ const RelicForm = (props) => {
             };
         }, []);
 
+        const updateRelicsFormList = (name, list, addCallback, removeCallback) => {
+            const idx = list.indexOf(name);
+            if (idx < 0)
+                addCallback(name);
+            else
+                removeCallback(name);
+        };
+
         const handleCheckboxChange = (event, isrefinement) => {
             const target = event.target;
-            const value = target.type === 'checkbox' ? target.checked : target.value;
             const name = target.name;
 
             if (isrefinement) {
-                if (value)
-                    relicsFormStore.addRefinementList(name);
-                else
-                    relicsFormStore.removeRefinementList(name);
+                updateRelicsFormList(name, relicsFormState.refinementList, relicsFormStore.addRefinementList, relicsFormStore.removeRefinementList);
             } else {
-                if (value)
-                    relicsFormStore.addRelicsTypesList(name);
-                else
-                    relicsFormStore.removeRelicsTypesList(name);
+                updateRelicsFormList(name, relicsFormState.relicsTypesList, relicsFormStore.addRelicsTypesList, relicsFormStore.removeRelicsTypesList);
             }
+            
         };
 
+        const checkRefinement = (name) => {
+            console.log(relicsFormState.refinementList.indexOf(name) !== -1);
+            return relicsFormState.refinementList.indexOf(name) !== -1;
+        };
         const checkRelics = (name) => {
             return relicsFormState.relicsTypesList.indexOf(name) !== -1;
         };
@@ -71,7 +77,7 @@ const RelicForm = (props) => {
                         props.setRelicsStats(res.data);
                     })
                     .catch(err => {
-                        console.log(err);
+                        console.error(err);
                     });
             });
         };
@@ -86,7 +92,8 @@ const RelicForm = (props) => {
                                 {relicsState.refinementList.map(refin => (
                                     <FormGroup key={refin} check>
                                         <Label check>
-                                            <Input name={refin} value="refin" type="checkbox"
+                                            <Input name={refin} value={refin} type="checkbox"
+                                                   defaultChecked={checkRefinement(refin)}
                                                    onChange={(event) => handleCheckboxChange(event, true)}/>
                                             {' '}
                                             {refin}
