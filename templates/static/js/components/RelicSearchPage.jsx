@@ -23,8 +23,8 @@ const RelicSearchPage = () => {
     return (
         <div>
             <Suspense fallback={<div>Loading..</div>}>
-                <RelicForm setRelicsStats={updateRelicsStats}/>
-                <RelicTable data={relicsStats.relics}/>
+                <RelicForm setRelicsStats={updateRelicsStats} setLoadingState={relicsStatsStore.setLoadingState}/>
+                <RelicTable data={relicsStats.relics} isLoading={relicsStats.isLoading} />
             </Suspense>
         </div>
     )

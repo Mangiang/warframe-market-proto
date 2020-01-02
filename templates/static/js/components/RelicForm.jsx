@@ -12,6 +12,7 @@ const RelicForm = (props) => {
         const [relicsFormState, setRelicsFormState] = useState(relicsFormStore.initialState);
         const [relicsState, setRelicsState] = useState(relicsStore.initialState);
 
+
         useLayoutEffect(() => {
             const formSubscription = relicsFormStore.subscribe(setRelicsFormState);
             relicsFormStore.init();
@@ -57,13 +58,16 @@ const RelicForm = (props) => {
             return relicsFormState.relicsTypesList.indexOf(name) !== -1;
         };
 
+
         const submit = () => {
+            props.setLoadingState(true);
             import('axios').then(axios => {
                 axios.post(`${BACKEND_URL}/getRelicsStats`, {
                     refinement: relicsFormState.refinementList,
                     relic_name: relicsFormState.relicsTypesList
                 })
                     .then(res => {
+                        props.setLoadingState(false);
                         props.setRelicsStats(res.data);
                     })
                     .catch(err => {

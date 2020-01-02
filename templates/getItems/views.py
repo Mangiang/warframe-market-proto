@@ -21,9 +21,21 @@ def get_relics_list():
     return jsonify([relics for relics in items.void_relics.relics])
 
 
+# The requests progression [currentRequestNb, totalRequestsNb]
+request_progression = {'request_done': 0, 'request_total': 0}
+
+
+@get_items_blueprint.route('/getRelicsProgression', methods=['GET'])
+@cross_origin()
+def get_relics_progress():
+    return jsonify(request_progression)
+
+
 @get_items_blueprint.route('/getRelicsStats', methods=['POST'])
 @cross_origin()
 def get_relics_stats():
+    global request_progression
+
     content = request.get_json()
     app.logger.info(f'Content {content}')
 
@@ -35,7 +47,7 @@ def get_relics_stats():
     item_data = []
 
     id = 1
-
+    request_progression = {'request_done': id, 'request_total': len(refinement) * len(relic_names)}
     for refin in refinement:
         for relic in relic_names:
             response = get_item(f'{relic}_{refin}')
@@ -43,7 +55,9 @@ def get_relics_stats():
             response['id'] = id
             id += 1
             item_data.append(response)
+            request_progression['request_done'] = id
 
+    request_progression = [0, 0]
     app.logger.info(f'item_data {item_data}')
     return jsonify(item_data)
 

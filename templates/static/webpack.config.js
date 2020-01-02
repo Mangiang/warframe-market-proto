@@ -1,7 +1,6 @@
 const resolve = require('path').resolve;
 const merge = require("webpack-merge");
 const parts = require('./webpack.parts');
-const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const config = {
     mode: 'development',
@@ -13,12 +12,8 @@ const config = {
         publicPath: '../public/dist/',
     },
     resolve: {
-        extensions: [ '.mjs','.js', '.jsx', '.css', '.json']
-    },    plugins: [new HtmlWebpackPlugin({
-        filename: resolve(__dirname, 'base.html'),
-        template: resolve(__dirname, 'base.html'),
-        favicon: resolve(__dirname, '../public/icons/favicon.ico')
-    })],
+        extensions: ['.mjs', '.js', '.jsx', '.css', '.json']
+    },
     module: {
         rules: [
             {

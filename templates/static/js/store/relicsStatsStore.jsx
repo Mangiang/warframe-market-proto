@@ -3,7 +3,8 @@ import {Subject} from 'rxjs';
 const subject = new Subject();
 
 const initialState = {
-    relics: []
+    relics: [],
+    isLoading: false,
 };
 let state = initialState;
 
@@ -15,6 +16,13 @@ const relicsStatsStore = {
         state = {
             ...state,
             relics: newList,
+        };
+        subject.next(state);
+    },
+    setLoadingState: newState => {
+        state = {
+            ...state,
+            isLoading: newState,
         };
         subject.next(state);
     },
