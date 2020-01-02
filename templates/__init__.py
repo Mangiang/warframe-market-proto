@@ -6,12 +6,18 @@ from flask.logging import default_handler
 from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_compress import Compress
 
 from items.items import Items
 from logger import RequestFormatter
 
+COMPRESS_MIMETYPES = ['text/html', 'text/css', 'text/xml', 'application/json', 'application/javascript']
+COMPRESS_LEVEL = 6
+COMPRESS_MIN_SIZE = 500
+
 app = Flask(__name__, static_folder='./public', template_folder="./static")
 CORS(app)
+Compress(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 limiter = Limiter(key_func=get_remote_address)
 limiter.init_app(app)

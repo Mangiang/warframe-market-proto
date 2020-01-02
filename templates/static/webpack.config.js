@@ -7,9 +7,9 @@ const config = {
     devtool: 'source-map',
     entry: __dirname + '/js/index.jsx',
     output: {
-        path: resolve(__dirname, '../public/'),
+        path: resolve(__dirname, '../public/dist/'),
         filename: 'bundle.js',
-        publicPath: '../public/',
+        publicPath: '../public/dist/',
     },
     resolve: {
         extensions: [ '.mjs','.js', '.jsx', '.css', '.json']

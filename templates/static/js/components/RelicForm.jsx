@@ -1,13 +1,14 @@
 import React, {useLayoutEffect, useState} from 'react';
-import {Button, Form, FormGroup, Input, Label} from 'reactstrap';
 import relicsStore from '../store/relicsStore';
 import relicsFormStore from '../store/relicsFormStore';
+import {Button, Form, FormGroup, Input, Label} from 'reactstrap';
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
 
 import 'react-tabs/style/react-tabs.css';
 import "../../../public/css/relicForm.module.css"
 
 const RelicForm = (props) => {
+
         const [relicsFormState, setRelicsFormState] = useState(relicsFormStore.initialState);
         const [relicsState, setRelicsState] = useState(relicsStore.initialState);
 
@@ -82,7 +83,8 @@ const RelicForm = (props) => {
                                     <FormGroup key={refin} check>
                                         <Label check>
                                             <Input name={refin} value="refin" type="checkbox"
-                                                   onChange={(event) => handleCheckboxChange(event, true)}/>{' '}
+                                                   onChange={(event) => handleCheckboxChange(event, true)}/>
+                                            {' '}
                                             {refin}
                                         </Label>
                                     </FormGroup>
@@ -111,7 +113,8 @@ const RelicForm = (props) => {
                                                                    name={`${relic.era}_${relicName}`}
                                                                    defaultChecked={checkRelics(`${relic.era}_${relicName}`)}
                                                                    type="checkbox"
-                                                                   onChange={(event) => handleCheckboxChange(event, false)}/>{' '}
+                                                                   onChange={(event) => handleCheckboxChange(event, false)}/>
+                                                            {' '}
                                                             {relicName}
                                                         </Label>
                                                     </FormGroup>
@@ -131,8 +134,7 @@ const RelicForm = (props) => {
                     </div>
                 </div>
             </div>
-        )
-            ;
+        );
     }
 ;
 
