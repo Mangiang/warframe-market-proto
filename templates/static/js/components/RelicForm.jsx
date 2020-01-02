@@ -1,6 +1,5 @@
 import React, {useLayoutEffect, useState} from 'react';
 import {Button, Form, FormGroup, Input, Label} from 'reactstrap';
-import axios from 'axios';
 import relicsStore from '../store/relicsStore';
 import relicsFormStore from '../store/relicsFormStore';
 import {Tab, TabList, TabPanel, Tabs} from "react-tabs";
@@ -13,20 +12,22 @@ const RelicForm = (props) => {
         const [relicsState, setRelicsState] = useState(relicsStore.initialState);
 
         useLayoutEffect(() => {
-            console.log(BACKEND_URL);
             relicsFormStore.subscribe(setRelicsFormState);
             relicsFormStore.init();
             relicsStore.subscribe(setRelicsState);
             relicsStore.init();
-            axios.get(`${BACKEND_URL}/getRefinementList`)
-                .then(res => {
-                    relicsStore.setRefinementList(res.data);
-                });
 
-            axios.get(`${BACKEND_URL}/getRelicsList`)
-                .then(res => {
-                    relicsStore.setRelicsTypesList(res.data);
-                });
+            import('axios').then(axios => {
+                axios.get(`${BACKEND_URL}/getRefinementList`)
+                    .then(res => {
+                        relicsStore.setRefinementList(res.data);
+                    });
+
+                axios.get(`${BACKEND_URL}/getRelicsList`)
+                    .then(res => {
+                        relicsStore.setRelicsTypesList(res.data);
+                    });
+            });
         }, []);
 
         const handleCheckboxChange = (event, isrefinement) => {
@@ -52,16 +53,18 @@ const RelicForm = (props) => {
         };
 
         const submit = () => {
-            axios.post(`${BACKEND_URL}/getRelicsStats`, {
-                refinement: relicsFormState.refinementList,
-                relic_name: relicsFormState.relicsTypesList
-            })
-                .then(res => {
-                    props.setRelicsStats(res.data);
+            import('axios').then(axios => {
+                axios.post(`${BACKEND_URL}/getRelicsStats`, {
+                    refinement: relicsFormState.refinementList,
+                    relic_name: relicsFormState.relicsTypesList
                 })
-                .catch(err => {
-                    console.log(err);
-                });
+                    .then(res => {
+                        props.setRelicsStats(res.data);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            });
         };
 
         return (

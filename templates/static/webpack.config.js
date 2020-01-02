@@ -3,15 +3,16 @@ const merge = require("webpack-merge");
 const parts = require('./webpack.parts');
 
 const config = {
-    devtool: 'eval-source-map',
+    mode: 'development',
+    devtool: 'source-map',
     entry: __dirname + '/js/index.jsx',
     output: {
-        path: resolve('../public'),
+        path: resolve(__dirname, '../public/'),
         filename: 'bundle.js',
-        publicPath: resolve('../public')
+        publicPath: '../public/',
     },
     resolve: {
-        extensions: ['.js', '.jsx', '.css']
+        extensions: [ '.mjs','.js', '.jsx', '.css', '.json']
     },
     module: {
         rules: [
@@ -30,5 +31,5 @@ const config = {
 };
 
 module.exports = merge([config,
-    parts.setFreeVariable("BACKEND_URL", "http://127.0.0.1:5000"),
+    parts.setFreeVariable("BACKEND_URL", "http://localhost:5000"),
 ]);
