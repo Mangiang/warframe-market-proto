@@ -10,6 +10,7 @@ let state = initialState;
 const relicsStatsStore = {
     init: () => subject.next(state),
     subscribe: setState => subject.subscribe(setState),
+    unsubscribe: () => subject.unsubscribe(),
     setRelicsList: newList => {
         state = {
             ...state,

@@ -1,5 +1,4 @@
-import React from 'react';
-import DataTable from 'react-data-table-component';
+import React, {Suspense} from 'react';
 
 const RelicTable = (props) => {
     const columns = [
@@ -57,13 +56,19 @@ const RelicTable = (props) => {
 
     const data = props.data;
 
+    const DataTable = React.lazy(() => import('react-data-table-component'));
+
     return (
-        <DataTable
-            title="Relics"
-            columns={columns}
-            striped={true}
-            data={data}
-        />
+        <div>
+            <Suspense fallback={<div>Loading..</div>}>
+                <DataTable
+                    title="Relics"
+                    columns={columns}
+                    striped={true}
+                    data={data}
+                />
+            </Suspense>
+        </div>
     )
 };
 

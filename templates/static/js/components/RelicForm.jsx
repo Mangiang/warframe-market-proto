@@ -12,9 +12,9 @@ const RelicForm = (props) => {
         const [relicsState, setRelicsState] = useState(relicsStore.initialState);
 
         useLayoutEffect(() => {
-            relicsFormStore.subscribe(setRelicsFormState);
+            const formSubscription = relicsFormStore.subscribe(setRelicsFormState);
             relicsFormStore.init();
-            relicsStore.subscribe(setRelicsState);
+            const storeSubscription = relicsStore.subscribe(setRelicsState);
             relicsStore.init();
 
             import('axios').then(axios => {
@@ -28,6 +28,10 @@ const RelicForm = (props) => {
                         relicsStore.setRelicsTypesList(res.data);
                     });
             });
+            return () => {
+                formSubscription.unsubscribe();
+                storeSubscription.unsubscribe();
+            };
         }, []);
 
         const handleCheckboxChange = (event, isrefinement) => {

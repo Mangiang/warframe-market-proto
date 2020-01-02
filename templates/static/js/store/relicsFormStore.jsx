@@ -11,6 +11,7 @@ let state = initialState;
 const relicsFormStore = {
     init: () => subject.next(state),
     subscribe: setState => subject.subscribe(setState),
+    unsubscribe: () => subject.unsubscribe(),
     addRefinementList: newRefin => {
         state = {
             ...state,
