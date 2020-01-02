@@ -4,3 +4,4 @@ flask-cors
 flask-limiter
 gunicorn
 python-dateutil
+flask-compress
