@@ -21,6 +21,17 @@ def get_relics_list():
     return jsonify([relics for relics in items.void_relics.relics])
 
 
+@get_items_blueprint.route('/getRelicsFullNameList', methods=['GET'])
+@cross_origin()
+def get_relics_full_name_list():
+    relics_list = []
+    for refinement in items.void_relics.refinement:
+        for relics in items.void_relics.relics:
+            for relic_name in relics['names']:
+                relics_list.append(f" {relics['era'].capitalize()} {relic_name.capitalize()} {refinement.capitalize()}")
+    return jsonify(relics_list)
+
+
 # The requests progression [currentRequestNb, totalRequestsNb]
 request_progression = {'request_done': 0, 'request_total': 0}
 

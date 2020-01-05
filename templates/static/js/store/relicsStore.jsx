@@ -4,6 +4,7 @@ const subject = new Subject();
 
 const initialState = {
     refinementList: [],
+    relicsFullNameList: [],
     relicsTypesList: []
 };
 let state = initialState;
@@ -23,6 +24,13 @@ const relicsStore = {
         state = {
             ...state,
             relicsTypesList: newList,
+        };
+        subject.next(state);
+    },
+    setRelicsFullNameList: newList => {
+        state = {
+            ...state,
+            relicsFullNameList: newList,
         };
         subject.next(state);
     },
