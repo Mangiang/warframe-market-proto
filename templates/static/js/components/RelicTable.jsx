@@ -1,26 +1,11 @@
-import React, {Suspense, useEffect, useRef, useState, useMemo} from 'react';
-import {Progress, Button} from "reactstrap";
+import React, {Suspense, useMemo} from 'react';
+import {Button} from "reactstrap";
+import Rotate from 'react-reveal/Rotate';
+import '../../../public/css/RelicTable.css';
 
-const useInterval = (callback, delay) => {
-    const savedCallback = useRef();
+import logo from '../../images/warframe_new_logo.png';
 
-    useEffect(() => {
-        savedCallback.current = callback;
-    });
-
-    useEffect(() => {
-        function tick() {
-            savedCallback.current();
-        }
-
-        if (delay !== null) {
-            let id = setInterval(tick, delay);
-            return () => clearInterval(id);
-        }
-    }, []);
-};
 const RelicTable = (props) => {
-    const [progressState, setProgressState] = useState({done: 0, total: 0});
     const columns = useMemo(() => [
         {
             cell: (elt) => <Button color={"danger"} onClick={() => props.removeRelic(elt.name)}>Remove</Button>,
@@ -80,14 +65,31 @@ const RelicTable = (props) => {
         },
     ]);
 
+    const loadingComponent = () =>
+        (
+            <Rotate>
+                <img src={logo} alt={"Loading..."}/>
+            </Rotate>
+        )
+    ;
+
     const DataTable = React.lazy(() => import('react-data-table-component'));
 
     return (
         <div>
             {props.isLoading &&
-            <Progress animated
-                      value={progressState.done}
-                      max={progressState.total}>{`${progressState.done}/${progressState.total}`}</Progress>
+            <Suspense fallback={<div>Loading..</div>}>
+                <DataTable
+                    progressPending={true}
+                    progressComponent={loadingComponent()}
+                    title="Relics"
+                    columns={columns}
+                    striped={true}
+                    highlightOnHover={true}
+                    persistTableHead={true}
+                    data={props.data}
+                />
+            </Suspense>
             }
             {!props.isLoading && props.data && props.data.length > 0 &&
             <Suspense fallback={<div>Loading..</div>}>

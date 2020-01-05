@@ -20,10 +20,12 @@ const relicsStatsStore = {
         subject.next(state);
     },
     addRelicsList: newRelic => {
-        state = {
-            ...state,
-            relics: [...state.relics, newRelic],
-        };
+        if (!state.relics.includes((val) => newRelic === val)) {
+            state = {
+                ...state,
+                relics: [...state.relics, newRelic],
+            };
+        }
         subject.next(state);
     },
     removeRelicsFromList: newRelic => {

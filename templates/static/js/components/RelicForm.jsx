@@ -47,6 +47,7 @@ const RelicForm = (props) => {
                 <div className="row justify-content-center align-items-center">
                     <div className="col-12">
                         <Autocomplete
+                            disable={props.isLoading}
                             exclude={props.data}
                             onSubmit={submit}
                             suggestions={relicsState.relicsFullNameList}

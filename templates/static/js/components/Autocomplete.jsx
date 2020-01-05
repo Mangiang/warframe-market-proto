@@ -1,5 +1,6 @@
 import React, {Fragment, useEffect, useRef, useState} from "react";
 import '../../../public/css/Autocomplete.css';
+import {Input} from "reactstrap";
 
 const Autocomplete = (props) => {
     const [suggestionsState, setSuggestionsState] = useState({
@@ -11,7 +12,6 @@ const Autocomplete = (props) => {
     const inputField = useRef(null);
 
     useEffect(() => {
-
         inputField.current.focus();
     }, []);
 
@@ -67,7 +67,6 @@ const Autocomplete = (props) => {
             if (activeSuggestion === 0) {
                 return;
             }
-
             setSuggestionsState({...suggestionsState, activeSuggestion: activeSuggestion - 1});
         }
         // User pressed the down arrow, increment the index
@@ -108,6 +107,7 @@ const Autocomplete = (props) => {
                             // Flag the active suggestion with a class
                             if (index === suggestionsState.activeSuggestion) {
                                 className = "suggestion-active";
+
                             }
 
                             return (
@@ -116,6 +116,9 @@ const Autocomplete = (props) => {
                                     key={suggestion}
                                     onClick={onClick}
                                     tabIndex="0"
+                                    ref={elt => {
+                                        if (index === suggestionsState.activeSuggestion && elt != null) elt.scrollIntoViewIfNeeded(false);
+                                    }}
                                 >
                                     {suggestion}
                                 </li>
@@ -137,7 +140,8 @@ const Autocomplete = (props) => {
 
     return (
         <Fragment>
-            <input
+            <Input
+                disabled={props.disable}
                 ref={inputField}
                 type="text"
                 placeholder={"Relic Name"}
