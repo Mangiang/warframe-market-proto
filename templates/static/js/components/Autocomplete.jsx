@@ -1,4 +1,4 @@
-import React, {Fragment, useState} from "react";
+import React, {Fragment, useEffect, useRef, useState} from "react";
 import '../../../public/css/Autocomplete.css';
 
 const Autocomplete = (props) => {
@@ -8,6 +8,12 @@ const Autocomplete = (props) => {
         showSuggestions: false,
         userInput: ""
     });
+    const inputField = useRef(null);
+
+    useEffect(() => {
+
+        inputField.current.focus();
+    }, []);
 
     const onChange = e => {
         const {suggestions} = props;
@@ -132,6 +138,7 @@ const Autocomplete = (props) => {
     return (
         <Fragment>
             <input
+                ref={inputField}
                 type="text"
                 placeholder={"Relic Name"}
                 onChange={onChange}
