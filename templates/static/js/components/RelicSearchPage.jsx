@@ -14,8 +14,12 @@ const RelicSearchPage = () => {
     }, []);
 
     const updateRelicsStats = (newValue) => {
-        relicsStatsStore.setRelicsList(newValue);
+        relicsStatsStore.addRelicsList(newValue);
     };
+     const removeRelicsStats = (newValue) => {
+        relicsStatsStore.removeRelicsFromList(newValue);
+    };
+
 
     const RelicForm = React.lazy(() => import('./RelicForm'));
     const RelicTable = React.lazy(() => import('./RelicTable'));
@@ -23,8 +27,8 @@ const RelicSearchPage = () => {
     return (
         <div>
             <Suspense fallback={<div>Loading..</div>}>
-                <RelicForm setRelicsStats={updateRelicsStats} setLoadingState={relicsStatsStore.setLoadingState}/>
-                <RelicTable data={relicsStats.relics} isLoading={relicsStats.isLoading} />
+                <RelicForm addRelicsStats={updateRelicsStats} data={relicsStats.relics.map(rel => rel.name)} setLoadingState={relicsStatsStore.setLoadingState}/>
+                <RelicTable data={relicsStats.relics} isLoading={relicsStats.isLoading} removeRelic={removeRelicsStats}/>
             </Suspense>
         </div>
     )

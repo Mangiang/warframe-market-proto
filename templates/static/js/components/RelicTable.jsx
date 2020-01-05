@@ -1,5 +1,5 @@
-import React, {Suspense, useEffect, useRef, useState} from 'react';
-import {Progress} from "reactstrap";
+import React, {Suspense, useEffect, useRef, useState, useMemo} from 'react';
+import {Progress, Button} from "reactstrap";
 
 const useInterval = (callback, delay) => {
     const savedCallback = useRef();
@@ -21,7 +21,13 @@ const useInterval = (callback, delay) => {
 };
 const RelicTable = (props) => {
     const [progressState, setProgressState] = useState({done: 0, total: 0});
-    const columns = [
+    const columns = useMemo(() => [
+        {
+            cell: (elt) => <Button color={"danger"} onClick={() => props.removeRelic(elt.name)}>Remove</Button>,
+            ignoreRowClick: true,
+            allowOverflow: true,
+            button: true,
+        },
         {
             name: 'Relic Name',
             selector: 'name',
@@ -72,24 +78,16 @@ const RelicTable = (props) => {
             selector: 'median_price',
             sortable: true,
         },
-    ];
+    ]);
 
     const DataTable = React.lazy(() => import('react-data-table-component'));
-
-    useInterval(() => {
-        import('axios').then(axios => {
-            axios.get(`${BACKEND_URL}/getRelicsProgression`)
-                .then(res => {
-                    setProgressState({done: res.data['request_done'], total: res.data['request_total']});
-                });
-        });
-    }, props.isLoading ? 1000 : null);
 
     return (
         <div>
             {props.isLoading &&
             <Progress animated
-                      value={progressState.done} max={progressState.total}>{`${progressState.done}/${progressState.total}`}</Progress>
+                      value={progressState.done}
+                      max={progressState.total}>{`${progressState.done}/${progressState.total}`}</Progress>
             }
             {!props.isLoading && props.data && props.data.length > 0 &&
             <Suspense fallback={<div>Loading..</div>}>
@@ -97,6 +95,8 @@ const RelicTable = (props) => {
                     title="Relics"
                     columns={columns}
                     striped={true}
+                    highlightOnHover={true}
+                    persistTableHead={true}
                     data={props.data}
                 />
             </Suspense>

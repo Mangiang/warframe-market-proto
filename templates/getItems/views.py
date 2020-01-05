@@ -34,6 +34,7 @@ def get_relics_full_name_list():
 
 # The requests progression [currentRequestNb, totalRequestsNb]
 request_progression = {'request_done': 0, 'request_total': 0}
+id = 1
 
 
 @get_items_blueprint.route('/getRelicsProgression', methods=['GET'])
@@ -45,32 +46,26 @@ def get_relics_progress():
 @get_items_blueprint.route('/getRelicsStats', methods=['POST'])
 @cross_origin()
 def get_relics_stats():
-    global request_progression
+    global request_progression, id
 
     content = request.get_json()
     app.logger.info(f'Content {content}')
 
-    refinement = content["refinement"]
-    app.logger.info(f'refinement {refinement}')
+    relic_name = content['value'].lower().replace(' ', '_')
+    app.logger.info(f'relic names {relic_name}')
 
-    relic_names = content["relic_name"]
-    app.logger.info(f'relic names {relic_names}')
-    item_data = []
-
-    id = 1
-    request_progression = {'request_done': id, 'request_total': len(refinement) * len(relic_names)}
-    for refin in refinement:
-        for relic in relic_names:
-            response = get_item(f'{relic}_{refin}')
-            app.logger.info(f'Response {response}')
-            response['id'] = id
-            id += 1
-            item_data.append(response)
-            request_progression['request_done'] = id
+    request_progression = {'request_done': id, 'request_total': len(relic_name)}
+    response = get_item(relic_name)
+    app.logger.info(f'Response {response}')
+    response['id'] = id
+    id += 1
+    request_progression['request_done'] = id
+    response['fullName'] = response['name']
+    response['name'] = content['value']
 
     request_progression = [0, 0]
-    app.logger.info(f'item_data {item_data}')
-    return jsonify(item_data)
+    app.logger.info(f'item_data {response}')
+    return jsonify(response)
 
 
 def get_item(item_name):

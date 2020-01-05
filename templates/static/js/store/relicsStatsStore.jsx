@@ -19,6 +19,20 @@ const relicsStatsStore = {
         };
         subject.next(state);
     },
+    addRelicsList: newRelic => {
+        state = {
+            ...state,
+            relics: [...state.relics, newRelic],
+        };
+        subject.next(state);
+    },
+    removeRelicsFromList: newRelic => {
+        state = {
+            ...state,
+            relics: state.relics.filter((val) => newRelic !== val.name),
+        };
+        subject.next(state);
+    },
     setLoadingState: newState => {
         state = {
             ...state,

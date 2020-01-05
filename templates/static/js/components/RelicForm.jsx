@@ -27,13 +27,13 @@ const RelicForm = (props) => {
             };
         }, []);
 
-        const submit = () => {
+        const submit = (value) => {
             props.setLoadingState(true);
             import('axios').then(axios => {
-                axios.post(`${BACKEND_URL}/getRelicsStats`, {})
+                axios.post(`${BACKEND_URL}/getRelicsStats`, {value})
                     .then(res => {
                         props.setLoadingState(false);
-                        props.setRelicsStats(res.data);
+                        props.addRelicsStats(res.data);
                     })
                     .catch(err => {
                         console.error(err);
@@ -47,15 +47,12 @@ const RelicForm = (props) => {
                 <div className="row justify-content-center align-items-center">
                     <div className="col-12">
                         <Autocomplete
+                            exclude={props.data}
+                            onSubmit={submit}
                             suggestions={relicsState.relicsFullNameList}
                         />
                     </div>
                 </div>}
-                <div className="row">
-                    <div className="col">
-                        <Button color="primary" className="float-left" onClick={submit}>Search</Button>
-                    </div>
-                </div>
             </div>
         );
     }

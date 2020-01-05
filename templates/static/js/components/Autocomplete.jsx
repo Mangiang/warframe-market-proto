@@ -32,11 +32,13 @@ const Autocomplete = (props) => {
 
     const onClick = e => {
         setSuggestionsState({
+            ...suggestionsState,
             activeSuggestion: 0,
             filteredSuggestions: [],
             showSuggestions: false,
-            userInput: e.currentTarget.innerText
+            userInput: ''
         });
+        props.onSubmit(e.currentTarget.innerText.trim());
     };
 
     const onKeyDown = e => {
@@ -47,10 +49,12 @@ const Autocomplete = (props) => {
         // suggestions
         if (e.keyCode === 13) {
             setSuggestionsState({
+                ...suggestionsState,
                 activeSuggestion: 0,
                 showSuggestions: false,
-                userInput: filteredSuggestions[activeSuggestion]
+                userInput: ''
             });
+            props.onSubmit(filteredSuggestions[activeSuggestion].trim());
         }
         // User pressed the up arrow, decrement the index
         else if (e.keyCode === 38) {
@@ -70,12 +74,14 @@ const Autocomplete = (props) => {
         }
     };
 
-    const onFocusOut = () => {
-        setSuggestionsState({
-            ...suggestionsState,
-            activeSuggestion: 0,
-            showSuggestions: false,
-        });
+    const onFocusOut = (event) => {
+        if (event.relatedTarget === null) {
+            setSuggestionsState({
+                ...suggestionsState,
+                activeSuggestion: 0,
+                showSuggestions: false,
+            });
+        }
     };
 
     const onFocus = (e) => {
@@ -90,6 +96,9 @@ const Autocomplete = (props) => {
                         {suggestionsState.filteredSuggestions.map((suggestion, index) => {
                             let className;
 
+                            if (props.exclude.indexOf(suggestion.trim()) !== -1)
+                                return;
+
                             // Flag the active suggestion with a class
                             if (index === suggestionsState.activeSuggestion) {
                                 className = "suggestion-active";
@@ -100,6 +109,7 @@ const Autocomplete = (props) => {
                                     className={className}
                                     key={suggestion}
                                     onClick={onClick}
+                                    tabIndex="0"
                                 >
                                     {suggestion}
                                 </li>
@@ -126,8 +136,8 @@ const Autocomplete = (props) => {
                 placeholder={"Relic Name"}
                 onChange={onChange}
                 onKeyDown={onKeyDown}
-                onBlur={onFocusOut}
                 onFocus={onFocus}
+                onBlur={onFocusOut}
                 value={suggestionsState.userInput}
             />
             {render()}
