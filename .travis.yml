@@ -12,7 +12,7 @@ jobs:
           - templates/static/node_modules
       script:
         - cd templates/static
-        - yarn install
+        - yarn install --ignore-engines
         - yarn run build
         - cd ../..
       after_success:
