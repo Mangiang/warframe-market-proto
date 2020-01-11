@@ -63,7 +63,7 @@ def get_relics_stats():
     response['fullName'] = response['name']
     response['name'] = content['value']
 
-    request_progression = [0, 0]
+    request_progression = {'request_done': 0, 'request_total': 0}
     app.logger.info(f'item_data {response}')
     return jsonify(response)
 
