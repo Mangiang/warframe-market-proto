@@ -1,6 +1,5 @@
 import React, {Fragment, useEffect, useRef, useState} from "react";
 import '../../../public/css/Autocomplete.css';
-import {Input} from "reactstrap";
 
 const Autocomplete = (props) => {
     const [suggestionsState, setSuggestionsState] = useState({
@@ -140,7 +139,7 @@ const Autocomplete = (props) => {
 
     return (
         <Fragment>
-            <Input
+            <input
                 disabled={props.disable}
                 ref={inputField}
                 type="text"

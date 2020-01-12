@@ -1,6 +1,5 @@
 import React, {useLayoutEffect, useState} from 'react';
 import relicsStore from '../store/relicsStore';
-import {Button} from 'reactstrap';
 import Autocomplete from "./Autocomplete";
 
 import 'react-tabs/style/react-tabs.css';

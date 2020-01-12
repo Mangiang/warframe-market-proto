@@ -1,12 +1,15 @@
 import React, {Suspense, useMemo, useState} from 'react';
-import {Button, Col, Nav, NavItem, NavLink, Row, TabContent, TabPane} from "reactstrap";
-import Rotate from 'react-reveal/Rotate';
 import '../../../public/css/RelicTable.css';
-import logo from '../../images/warframe_new_logo.png';
-import classnames from 'classnames';
+
 
 const RelicTable = (props) => {
     const DataTable = React.lazy(() => import('react-data-table-component'));
+    const Button = React.lazy(() => import('react-bootstrap/Button'));
+    const Spinner = React.lazy(() => import('react-bootstrap/Spinner'));
+    const Tab = React.lazy(() => import('react-bootstrap/Tab'));
+    const Tabs = React.lazy(() => import('react-bootstrap/Tabs'));
+
+
     const [activeTab, setActiveTab] = useState('sell');
     const toggle = tab => {
         if (activeTab !== tab) setActiveTab(tab);
@@ -14,7 +17,7 @@ const RelicTable = (props) => {
 
     const columns = useMemo(() => [
         {
-            cell: (elt) => <Button color={"danger"} onClick={() => props.removeRelic(elt.name)}>Remove</Button>,
+            cell: (elt) => <Button variant={"danger"} onClick={() => props.removeRelic(elt.name)}>Remove</Button>,
             ignoreRowClick: true,
             allowOverflow: true,
             button: true,
@@ -73,9 +76,7 @@ const RelicTable = (props) => {
 
     const loadingComponent = () =>
         (
-            <Rotate>
-                <img src={logo} alt={"Loading..."}/>
-            </Rotate>
+            <Spinner animation="border"/>
         )
     ;
 
@@ -100,59 +101,34 @@ const RelicTable = (props) => {
                     </div>
                     {!props.isLoading && props.data && props.data.length > 0 &&
                     <div>
-                        <Nav tabs>
-                            <NavItem>
-                                <NavLink
-                                    className={classnames({active: activeTab === 'sell'})} onClick={() => {
-                                    toggle('sell');
-                                }}>
-                                    Sellers
-                                </NavLink>
-                            </NavItem>
-                            <NavItem>
-                                <NavLink className={classnames({active: activeTab === 'buy'})} onClick={() => {
-                                    toggle('buy');
-                                }}>
-                                    Buyers
-                                </NavLink>
-                            </NavItem>
-                        </Nav>
-                        <TabContent activeTab={activeTab}>
-                            <TabPane tabId="sell">
-                                <Row>
-                                    <Col sm="12">
-                                        <DataTable
-                                            className="cell-border"
-                                            title="Relics"
-                                            columns={columns}
-                                            striped={true}
-                                            orderMulti={true}
-                                            highlightOnHover={true}
-                                            persistTableHead={true}
-                                            fixedheader={true}
-                                            data={props.data.filter(data => data.type === "sell")}
-                                        />
-                                    </Col>
-                                </Row>
-                            </TabPane>
-                            <TabPane tabId="buy">
-                                <Row>
-                                    <Col sm="12">
-                                        <DataTable
-                                            className="cell-border"
-                                            title="Relics"
-                                            columns={columns}
-                                            striped={true}
-                                            orderMulti={true}
-                                            highlightOnHover={true}
-                                            persistTableHead={true}
-                                            fixedheader={true}
-                                            data={props.data.filter(data => data.type === "buy")}
-                                        />
-                                    </Col>
-                                </Row>
-                            </TabPane>
-                        </TabContent>
+                        <Tabs defaultActiveKey="sell" id="dataTabs" transition={false}>
+                            <Tab eventKey="sell" title="Sellers">
+                                <DataTable
+                                    className="cell-border"
+                                    title="Relics"
+                                    columns={columns}
+                                    striped={true}
+                                    orderMulti={true}
+                                    highlightOnHover={true}
+                                    persistTableHead={true}
+                                    fixedheader={true}
+                                    data={props.data.filter(data => data.type === "sell")}
+                                />
+                            </Tab>
+                            <Tab eventKey="buy" title="Buyers">
+                                <DataTable
+                                    className="cell-border"
+                                    title="Relics"
+                                    columns={columns}
+                                    striped={true}
+                                    orderMulti={true}
+                                    highlightOnHover={true}
+                                    persistTableHead={true}
+                                    fixedheader={true}
+                                    data={props.data.filter(data => data.type === "buy")}
+                                />
+                            </Tab>
+                        </Tabs>
                     </div>
                     }
                 </Suspense>

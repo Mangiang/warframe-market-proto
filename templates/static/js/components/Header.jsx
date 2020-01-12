@@ -5,15 +5,18 @@ import {faGithub} from "@fortawesome/free-brands-svg-icons/faGithub";
 import {faUniversity} from "@fortawesome/free-solid-svg-icons/faUniversity";
 
 const Header = () => {
-    const Jumbotron = lazy(() => import('reactstrap/lib/Jumbotron'));
+    const Jumbotron = lazy(() => import('react-bootstrap/Jumbotron'));
+    const Container = lazy(() => import('react-bootstrap/Container'));
+    const Row = lazy(() => import('react-bootstrap/Row'));
+    const Col = lazy(() => import('react-bootstrap/Col'));
 
     return (
         <Suspense fallback={"Loading..."}>
             <Jumbotron>
-                <div className="container">
-                    <div className="row">
-                        <div className="col-1"/>
-                        <div className="col-9">
+                <Container>
+                    <Row>
+                        <Col className="col-1"/>
+                        <Col className="col-9">
                             <h1 className="display-3">Warframe Market Proto</h1>
                             <p className="lead">Get the best relic to sell at any given time</p>
                             <hr className="my-2"/>
@@ -27,10 +30,10 @@ const Header = () => {
                                     <FontAwesomeIcon icon={faUniversity} color={"black"}/>
                                 </a>
                             </div>
-                        </div>
+                        </Col>
                         <div className="col-1"/>
-                    </div>
-                </div>
+                    </Row>
+                </Container>
             </Jumbotron>
         </Suspense>
     );
