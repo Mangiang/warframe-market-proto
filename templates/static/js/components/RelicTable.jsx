@@ -80,9 +80,9 @@ const RelicTable = (props) => {
 
 
     return (
-        <Container>
+        <Container fluid={true}>
             <Row className="justify-content-center mt-3">
-                <Col className="col-12">
+                <Col className="col-8">
                     <Suspense fallback={<div>Loading..</div>}>
                         <div>
                             {props.isLoading &&

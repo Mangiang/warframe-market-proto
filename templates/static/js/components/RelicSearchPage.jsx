@@ -37,18 +37,16 @@ const RelicSearchPage = () => {
 
 
     return (
-        <div>
-            <Suspense fallback={<div>Loading..</div>}>
-                {searchToasts &&
-                <SearchToast searchToasts={searchToasts} setSearchToasts={setSearchToasts}/>
-                }
-                <RelicForm addRelicsStats={updateRelicsStats} isLoading={relicsStats.isLoading}
-                           disableInput={disableInput} data={relicsStats.relics.map(rel => rel.name)}
-                           setLoadingState={relicsStatsStore.setLoadingState}/>
-                <RelicTable data={relicsStats.relics} isLoading={relicsStats.isLoading}
-                            removeRelic={removeRelicsStats}/>
-            </Suspense>
-        </div>
+        <Suspense fallback={<div>Loading..</div>}>
+            {searchToasts &&
+            <SearchToast searchToasts={searchToasts} setSearchToasts={setSearchToasts}/>
+            }
+            <RelicForm addRelicsStats={updateRelicsStats} isLoading={relicsStats.isLoading}
+                       disableInput={disableInput} data={relicsStats.relics.map(rel => rel.name)}
+                       setLoadingState={relicsStatsStore.setLoadingState}/>
+            <RelicTable data={relicsStats.relics} isLoading={relicsStats.isLoading}
+                        removeRelic={removeRelicsStats}/>
+        </Suspense>
     )
 };
 
