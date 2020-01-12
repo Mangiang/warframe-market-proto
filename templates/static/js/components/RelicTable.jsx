@@ -1,5 +1,6 @@
-import React, {Suspense, useMemo, useState} from 'react';
+import React, {Suspense, useLayoutEffect, useMemo, useState} from 'react';
 import '../../../public/css/RelicTable.css';
+import relicsStatsStore from "../store/relicsStatsStore";
 
 
 const RelicTable = (props) => {
@@ -12,6 +13,14 @@ const RelicTable = (props) => {
     const Row = React.lazy(() => import('react-bootstrap/Row'));
     const Col = React.lazy(() => import('react-bootstrap/Col'));
 
+    const [relicsStats, setRelicsStats] = useState(relicsStatsStore.initialState);
+
+    useLayoutEffect(() => {
+        const relicSubscription = relicsStatsStore.subscribe(setRelicsStats);
+        return () => {
+            relicSubscription.unsubscribe();
+        };
+    }, []);
 
     const columns = useMemo(() => [
         {
@@ -84,21 +93,27 @@ const RelicTable = (props) => {
             <Row className="justify-content-center mt-3">
                 <Col className="col-8">
                     <Suspense fallback={<div>Loading..</div>}>
+                        {relicsStats.isLoading &&
                         <div>
-                            {props.isLoading &&
-                            <DataTable
-                                progressPending={true}
-                                progressComponent={loadingComponent()}
-                                title="Relics"
-                                columns={columns}
-                                striped={true}
-                                highlightOnHover={true}
-                                persistTableHead={true}
-                                data={props.data}
-                            />
-                            }
+                            <Tabs defaultActiveKey="sell" id="dataTabs" transition={false}>
+                                <Tab eventKey="sell" title="Sellers">
+                                    <DataTable
+                                        progressPending={true}
+                                        progressComponent={loadingComponent()}
+                                        title="Relics"
+                                        columns={columns}
+                                        striped={true}
+                                        highlightOnHover={true}
+                                        persistTableHead={true}
+                                        data={relicsStats.relics}
+                                    />
+                                </Tab>
+                                <Tab eventKey="buy" title="Buyers">
+                                </Tab>
+                            </Tabs>
                         </div>
-                        {!props.isLoading && props.data && props.data.length > 0 &&
+                        }
+                        {!relicsStats.isLoading && relicsStats.relics && relicsStats.relics.length > 0 &&
                         <div>
                             <Tabs defaultActiveKey="sell" id="dataTabs" transition={false}>
                                 <Tab eventKey="sell" title="Sellers">
@@ -111,7 +126,7 @@ const RelicTable = (props) => {
                                         highlightOnHover={true}
                                         persistTableHead={true}
                                         fixedheader={true}
-                                        data={props.data.filter(data => data.type === "sell")}
+                                        data={relicsStats.relics.filter(data => data.type === "sell")}
                                     />
                                 </Tab>
                                 <Tab eventKey="buy" title="Buyers">
@@ -124,7 +139,7 @@ const RelicTable = (props) => {
                                         highlightOnHover={true}
                                         persistTableHead={true}
                                         fixedheader={true}
-                                        data={props.data.filter(data => data.type === "buy")}
+                                        data={relicsStats.relics.filter(data => data.type === "buy")}
                                     />
                                 </Tab>
                             </Tabs>

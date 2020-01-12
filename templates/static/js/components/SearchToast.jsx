@@ -3,7 +3,7 @@ import React, {useLayoutEffect, useState} from 'react';
 import '../../../public/css/Toasts.css'
 
 import logo from '../../images/warframe_new_logo.png';
-import toastStore from "../store/ToastStore";
+import toastStore from "../store/toastStore";
 
 const SearchToast = () => {
     const Toast = React.lazy(() => import('react-bootstrap/Toast'));
@@ -24,6 +24,8 @@ const SearchToast = () => {
     };
 
     const shouldShow = (key) => {
+        console.log(key);
+        console.log(searchToasts);
         return searchToasts.toasts.some(elt => elt.id === key)
     };
 
