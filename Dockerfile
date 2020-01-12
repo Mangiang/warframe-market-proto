@@ -1,4 +1,4 @@
-FROM python:slim
+FROM python:3.7.6-alpine3.10
 COPY . /app
 WORKDIR /app
 ARG PORT
