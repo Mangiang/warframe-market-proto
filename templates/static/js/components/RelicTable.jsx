@@ -1,11 +1,17 @@
-import React, {Suspense, useMemo} from 'react';
-import {Button} from "reactstrap";
+import React, {Suspense, useMemo, useState} from 'react';
+import {Button, Col, Nav, NavItem, NavLink, Row, TabContent, TabPane} from "reactstrap";
 import Rotate from 'react-reveal/Rotate';
 import '../../../public/css/RelicTable.css';
-
 import logo from '../../images/warframe_new_logo.png';
+import classnames from 'classnames';
 
 const RelicTable = (props) => {
+    const DataTable = React.lazy(() => import('react-data-table-component'));
+    const [activeTab, setActiveTab] = useState('sell');
+    const toggle = tab => {
+        if (activeTab !== tab) setActiveTab(tab);
+    };
+
     const columns = useMemo(() => [
         {
             cell: (elt) => <Button color={"danger"} onClick={() => props.removeRelic(elt.name)}>Remove</Button>,
@@ -73,37 +79,84 @@ const RelicTable = (props) => {
         )
     ;
 
-    const DataTable = React.lazy(() => import('react-data-table-component'));
 
     return (
-        <div>
-            {props.isLoading &&
-            <Suspense fallback={<div>Loading..</div>}>
-                <DataTable
-                    progressPending={true}
-                    progressComponent={loadingComponent()}
-                    title="Relics"
-                    columns={columns}
-                    striped={true}
-                    highlightOnHover={true}
-                    persistTableHead={true}
-                    data={props.data}
-                />
-            </Suspense>
-            }
-            {!props.isLoading && props.data && props.data.length > 0 &&
-            <Suspense fallback={<div>Loading..</div>}>
-                <DataTable
-                    title="Relics"
-                    columns={columns}
-                    striped={true}
-                    highlightOnHover={true}
-                    persistTableHead={true}
-                    data={props.data}
-                />
-            </Suspense>
-            }
-
+        <div className="row justify-content-center mt-3">
+            <div className="col col-8">
+                <Suspense fallback={<div>Loading..</div>}>
+                    <div>
+                        {props.isLoading &&
+                        <DataTable
+                            progressPending={true}
+                            progressComponent={loadingComponent()}
+                            title="Relics"
+                            columns={columns}
+                            striped={true}
+                            highlightOnHover={true}
+                            persistTableHead={true}
+                            data={props.data}
+                        />
+                        }
+                    </div>
+                    {!props.isLoading && props.data && props.data.length > 0 &&
+                    <div>
+                        <Nav tabs>
+                            <NavItem>
+                                <NavLink
+                                    className={classnames({active: activeTab === 'sell'})} onClick={() => {
+                                    toggle('sell');
+                                }}>
+                                    Sellers
+                                </NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink className={classnames({active: activeTab === 'buy'})} onClick={() => {
+                                    toggle('buy');
+                                }}>
+                                    Buyers
+                                </NavLink>
+                            </NavItem>
+                        </Nav>
+                        <TabContent activeTab={activeTab}>
+                            <TabPane tabId="sell">
+                                <Row>
+                                    <Col sm="12">
+                                        <DataTable
+                                            className="cell-border"
+                                            title="Relics"
+                                            columns={columns}
+                                            striped={true}
+                                            orderMulti={true}
+                                            highlightOnHover={true}
+                                            persistTableHead={true}
+                                            fixedheader={true}
+                                            data={props.data.filter(data => data.type === "sell")}
+                                        />
+                                    </Col>
+                                </Row>
+                            </TabPane>
+                            <TabPane tabId="buy">
+                                <Row>
+                                    <Col sm="12">
+                                        <DataTable
+                                            className="cell-border"
+                                            title="Relics"
+                                            columns={columns}
+                                            striped={true}
+                                            orderMulti={true}
+                                            highlightOnHover={true}
+                                            persistTableHead={true}
+                                            fixedheader={true}
+                                            data={props.data.filter(data => data.type === "buy")}
+                                        />
+                                    </Col>
+                                </Row>
+                            </TabPane>
+                        </TabContent>
+                    </div>
+                    }
+                </Suspense>
+            </div>
         </div>
     )
 };
