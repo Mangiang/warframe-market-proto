@@ -1,0 +1,19 @@
+.toast-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.toast-item {
+    height: 5vh;
+    width: 20vw;
+    background-color: lightcoral;
+}
+
+.toast-header{
+    height: 50%;
+}
+
+.toast-image{
+    height: 80%;
+}

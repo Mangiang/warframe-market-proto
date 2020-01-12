@@ -8,12 +8,10 @@ const RelicTable = (props) => {
     const Spinner = React.lazy(() => import('react-bootstrap/Spinner'));
     const Tab = React.lazy(() => import('react-bootstrap/Tab'));
     const Tabs = React.lazy(() => import('react-bootstrap/Tabs'));
+    const Container = React.lazy(() => import('react-bootstrap/Container'));
+    const Row = React.lazy(() => import('react-bootstrap/Row'));
+    const Col = React.lazy(() => import('react-bootstrap/Col'));
 
-
-    const [activeTab, setActiveTab] = useState('sell');
-    const toggle = tab => {
-        if (activeTab !== tab) setActiveTab(tab);
-    };
 
     const columns = useMemo(() => [
         {
@@ -82,58 +80,60 @@ const RelicTable = (props) => {
 
 
     return (
-        <div className="row justify-content-center mt-3">
-            <div className="col col-8">
-                <Suspense fallback={<div>Loading..</div>}>
-                    <div>
-                        {props.isLoading &&
-                        <DataTable
-                            progressPending={true}
-                            progressComponent={loadingComponent()}
-                            title="Relics"
-                            columns={columns}
-                            striped={true}
-                            highlightOnHover={true}
-                            persistTableHead={true}
-                            data={props.data}
-                        />
+        <Container>
+            <Row className="justify-content-center mt-3">
+                <Col className="col-12">
+                    <Suspense fallback={<div>Loading..</div>}>
+                        <div>
+                            {props.isLoading &&
+                            <DataTable
+                                progressPending={true}
+                                progressComponent={loadingComponent()}
+                                title="Relics"
+                                columns={columns}
+                                striped={true}
+                                highlightOnHover={true}
+                                persistTableHead={true}
+                                data={props.data}
+                            />
+                            }
+                        </div>
+                        {!props.isLoading && props.data && props.data.length > 0 &&
+                        <div>
+                            <Tabs defaultActiveKey="sell" id="dataTabs" transition={false}>
+                                <Tab eventKey="sell" title="Sellers">
+                                    <DataTable
+                                        className="cell-border"
+                                        title="Relics"
+                                        columns={columns}
+                                        striped={true}
+                                        orderMulti={true}
+                                        highlightOnHover={true}
+                                        persistTableHead={true}
+                                        fixedheader={true}
+                                        data={props.data.filter(data => data.type === "sell")}
+                                    />
+                                </Tab>
+                                <Tab eventKey="buy" title="Buyers">
+                                    <DataTable
+                                        className="cell-border"
+                                        title="Relics"
+                                        columns={columns}
+                                        striped={true}
+                                        orderMulti={true}
+                                        highlightOnHover={true}
+                                        persistTableHead={true}
+                                        fixedheader={true}
+                                        data={props.data.filter(data => data.type === "buy")}
+                                    />
+                                </Tab>
+                            </Tabs>
+                        </div>
                         }
-                    </div>
-                    {!props.isLoading && props.data && props.data.length > 0 &&
-                    <div>
-                        <Tabs defaultActiveKey="sell" id="dataTabs" transition={false}>
-                            <Tab eventKey="sell" title="Sellers">
-                                <DataTable
-                                    className="cell-border"
-                                    title="Relics"
-                                    columns={columns}
-                                    striped={true}
-                                    orderMulti={true}
-                                    highlightOnHover={true}
-                                    persistTableHead={true}
-                                    fixedheader={true}
-                                    data={props.data.filter(data => data.type === "sell")}
-                                />
-                            </Tab>
-                            <Tab eventKey="buy" title="Buyers">
-                                <DataTable
-                                    className="cell-border"
-                                    title="Relics"
-                                    columns={columns}
-                                    striped={true}
-                                    orderMulti={true}
-                                    highlightOnHover={true}
-                                    persistTableHead={true}
-                                    fixedheader={true}
-                                    data={props.data.filter(data => data.type === "buy")}
-                                />
-                            </Tab>
-                        </Tabs>
-                    </div>
-                    }
-                </Suspense>
-            </div>
-        </div>
+                    </Suspense>
+                </Col>
+            </Row>
+        </Container>
     )
 };
 
