@@ -1,29 +1,37 @@
-import React, {lazy, Suspense, useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 
 import '../../../public/css/Toasts.css'
 
 import logo from '../../images/warframe_new_logo.png';
+import toastStore from "../store/ToastStore";
 
-const SearchToast = (props) => {
+const SearchToast = () => {
     const Toast = React.lazy(() => import('react-bootstrap/Toast'));
     const ToastHeader = React.lazy(() => import('react-bootstrap/ToastHeader'));
     const ToastBody = React.lazy(() => import('react-bootstrap/ToastBody'));
+    const [searchToasts, setSearchToasts] = useState(toastStore.initialState);
+
+    useLayoutEffect(() => {
+        const toastSubscription = toastStore.subscribe(setSearchToasts);
+        toastStore.init();
+        return () => {
+            toastSubscription.unsubscribe();
+        };
+    }, []);
 
     const onClose = (key) => {
-        props.setSearchToasts(
-            props.searchToasts.filter(elt => elt.key !== key)
-        );
+        toastStore.removeToast(key);
     };
 
     const shouldShow = (key) => {
-        return props.searchToasts.find(elt => elt.key === key)
+        return searchToasts.toasts.some(elt => elt.id === key)
     };
 
     return (
         <div className={"toast-container"}>
-            {props.searchToasts && props.searchToasts.map(toast => (
-                <Toast key={toast.key} className={"toast-item"} onClose={() => onClose(toast.key)}
-                       show={() => shouldShow(toast.key)} delay={3000} autohide>
+            {searchToasts && searchToasts.toasts.map(toast => (
+                <Toast key={toast.id} className={"toast-item"} onClose={() => onClose(toast.id)}
+                       show={shouldShow(toast.id)} delay={3000} autohide>
                     <ToastHeader className={"toast-header"}>
                         <img src={logo} className={"toast-image"} alt=""/>
                         <strong className="mr-auto">Warframer market proto</strong>
