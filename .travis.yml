@@ -16,7 +16,7 @@ jobs:
         - yarn run build
         - cd ../..
       after_success:
-        - docker build -t $DOCKER_USERNAM/warframe-market-proto:latest .;
+        - docker build -t $DOCKER_USERNAME/warframe-market-proto:latest .;
         - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin;
         - docker push shirito/warframe-market-proto:latest;
       deploy:
